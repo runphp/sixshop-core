@@ -13,7 +13,7 @@
 请使用 Composer 来安装此扩展：
 
 ```bash
-composer require sixshop/core
+composer require six-shop/core
 ```
 
 ## 使用
