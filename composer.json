@@ -1,0 +1,22 @@
+{
+    "name": "sixshop/core",
+    "description": "核心扩展",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sixshop\\Core\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "hui he",
+            "email": "runphp@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.3"
+    }
+}
