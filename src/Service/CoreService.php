@@ -23,20 +23,20 @@ class CoreService extends Service
             require $this->app->getRootPath() . 'vendor/autoload.php');
         self::$extensionPath = $this->app->getRootPath() . 'extension' . DIRECTORY_SEPARATOR;
         $this->initExtensionList();
-
     }
 
     public function boot(): void
     {
         $this->app->make(AutoloadService::class)->init($this->app);
         $this->app->make(HookAttributeService::class)->init($this->app);
-        $this->app->event->listen(HttpRun::class,function (){
+        $this->app->event->listen(HttpRun::class, function () {
             $this->registerRoutes($this->app->make(RegisterRouteService::class)->init($this->app));
         });
 
         $this->app->make(CommandService::class)->init($this->app, function ($commands) {
             $this->commands($commands);
         });
+        $this->loadEnv();
     }
 
     public function initExtensionList(): void
@@ -47,12 +47,12 @@ class CoreService extends Service
                 self::$extensionNameList = require $coreFile;
             } else {
                 $extensionInfoList = [];
-                $extensionDirs = array_diff(scandir(self::extensionPath), ['.', '..']);
+                $extensionDirs = array_diff(scandir(self::$extensionPath), ['.', '..']);
                 foreach ($extensionDirs as $item) {
-                    if (!is_dir(self::extensionPath . $item)) {
+                    if (!is_dir(self::$extensionPath . $item)) {
                         continue;
                     }
-                    $infoFile = self::extensionPath . $item . '/info.php';
+                    $infoFile = self::$extensionPath . $item . '/info.php';
                     if (is_file($infoFile)) {
                         $info = require $infoFile;
                         $info['weight'] = $info['weight'] ?? 10000;
@@ -76,15 +76,13 @@ class CoreService extends Service
         }
     }
 
-    public function loadEnv(string $envName = ''): void
+    public function loadEnv(): void
     {
+        $envName = (fn() => $this->envName)->bindTo($this->app, $this->app)();
         $home = getenv('HOME');
         $envFile = $envName ? $home . '/.env.' . $envName : $home . '/.env';
         if (is_file($envFile)) {
             $this->app->env->load($envFile);
-            return;
         }
-        $this->app->loadEnv($envName);
     }
-
 }
