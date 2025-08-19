@@ -30,6 +30,6 @@
                 "SixShop\\Core\\Service\\CoreService"
             ]
         },
-        "class": "SixShop\\Core\\ExtensionInstaller"
+        "class": "SixShop\\Core\\Plugin"
     }
 }
