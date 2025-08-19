@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core;
+namespace SixShop\Core;
 
 
 class Extension extends ExtensionAbstract

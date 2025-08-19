@@ -1,19 +1,22 @@
 <?php
 declare(strict_types=1);
 
-use SixShop\core\Exception\LogicException;
-use SixShop\core\Response\Xml;
+namespace SixShop\Core;
+
+use SixShop\Core\Exception\LogicException;
+use SixShop\Core\Response\Xml;
+use SixShop\Core\Service\CoreService;
 use think\Container;
 use think\Paginator;
 use think\Response;
-use think\response\Json;
 
-if (!function_exists('success_response')) {
+class Helper
+{
 
     /**
      * 返回成功数据
      */
-    function success_response(mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success', string $type = 'json', string $xslt = ''): Response
+    public static function success_response(mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success', string $type = 'json', string $xslt = ''): Response
     {
         if ($xslt) {
             $type = 'xml';
@@ -33,13 +36,11 @@ if (!function_exists('success_response')) {
         }
         return $response;
     }
-}
 
-if (!function_exists('page_response')) {
     /**
      * 返回分页数据
      */
-    function page_response(Paginator $page, mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success'): Response
+    public static function page_response(Paginator $page, mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success'): Response
     {
         return json([
             'code' => $code,
@@ -49,13 +50,11 @@ if (!function_exists('page_response')) {
             'data' => $data
         ]);
     }
-}
 
-if (!function_exists('error_response')) {
     /**
      * 返回失败数据
      */
-    function error_response(string $msg = 'error', string $status = 'error', int $code = 1, mixed $data = [], int $httpCode = 400, $header = [], $options = []): Response
+    public static function error_response(string $msg = 'error', string $status = 'error', int $code = 1, mixed $data = [], int $httpCode = 400, $header = [], $options = []): Response
     {
         return json([
             'code' => $code,
@@ -64,19 +63,15 @@ if (!function_exists('error_response')) {
             'data' => $data
         ], $httpCode, $header, $options);
     }
-}
 
-if (!function_exists('throw_logic_exception')) {
     /**
      * 抛出逻辑异常
      */
-    function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
+    public static function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
     {
         throw new LogicException(error_response($msg, $status, $code, $data, $httpCode, $header, $options));
     }
-}
 
-if (!function_exists('build_tree_options')) {
     /**
      * 构建树形结构选项
      * @param array $data 数据源
@@ -87,7 +82,7 @@ if (!function_exists('build_tree_options')) {
      * @param string $childrenKey 子节点键
      * @param bool $preserveOriginal 是否保留原始数据
      */
-    function build_tree_options(
+    public static function build_tree_options(
         array  $data,
         string $valueField = 'id',
         string $labelField = 'name',
@@ -110,7 +105,7 @@ if (!function_exists('build_tree_options')) {
                     $node = array_merge($item, $node);
                 }
 
-                $children = build_tree_options(
+                $children = self::build_tree_options(
                     $data,
                     $valueField,
                     $labelField,
@@ -128,16 +123,13 @@ if (!function_exists('build_tree_options')) {
         }
         return $tree;
     }
-}
 
-
-if (!function_exists('secret_password')) {
     /**
      * 生成随机密码
      * @param int $length 密码长度
      * @return string 生成的密码
      */
-    function secret_password(int $length = 16): string
+    public static function secret_password(int $length = 16): string
     {
         // 确保密码包含各种字符类型
         $lowercase = 'abcdefghijklmnopqrstuvwxyz';
@@ -159,5 +151,16 @@ if (!function_exists('secret_password')) {
 
         // 打乱字符顺序
         return str_shuffle($password);
+    }
+
+
+    public static function extension_path()
+    {
+        return CoreService::$extensionPath;
+    }
+
+    public static function extension_name_list()
+    {
+        return CoreService::$extensionNameList;
     }
 }

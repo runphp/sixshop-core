@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Middleware;
+namespace SixShop\Core\Middleware;
 
 use Closure;
-use SixShop\core\Request;
+use SixShop\Core\Request;
 use think\Exception;
 use think\Response;
 

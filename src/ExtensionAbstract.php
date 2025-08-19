@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core;
+namespace SixShop\Core;
 
-use SixShop\core\Contracts\ExtensionInterface;
+use SixShop\Core\Contracts\ExtensionInterface;
 
 abstract class ExtensionAbstract implements ExtensionInterface
 {

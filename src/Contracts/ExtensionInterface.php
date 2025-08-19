@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Contracts;
+namespace SixShop\Core\Contracts;
 
 interface ExtensionInterface
 {

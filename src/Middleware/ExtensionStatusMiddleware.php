@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Middleware;
+namespace SixShop\Core\Middleware;
 
 use Closure;
 use SixShop\Extension\system\Enum\ExtensionStatusEnum;
@@ -18,7 +18,7 @@ class ExtensionStatusMiddleware
         $extensionModel = $this->extensionManager->getInfo($moduleName);
         return match ($extensionModel->status) {
             ExtensionStatusEnum::ENABLED => $next($request),
-            default => error_response(msg: '模块`' . $moduleName . '`未启用', httpCode: 403)
+            default => Helper::error_response(msg: '模块`' . $moduleName . '`未启用', httpCode: 403)
         };
     }
 }

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace SixShop\core\Exception;
+namespace SixShop\Core\Exception;
 
 use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;

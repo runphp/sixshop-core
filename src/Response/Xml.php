@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Response;
+namespace SixShop\Core\Response;
 
 class Xml extends \think\response\Xml
 {

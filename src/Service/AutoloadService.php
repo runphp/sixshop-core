@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Service;
+namespace SixShop\Core\Service;
 
 use Composer\Json\JsonFile;
-use SixShop\core\SixShopKernel;
+use SixShop\Core\Helper;
+use think\App;
 
 
 class AutoloadService
 {
-    public function init(SixShopKernel $app): void
+    public function init(App $app): void
     {
-        $extensionPath = $app->getExtensionPath();
+        $extensionPath = Helper::extension_path();
         $classLoader = $app->classLoader;
-        $moduleNameList = $app->getModuleNameList();
-        foreach ($moduleNameList as $moduleName) {
+        foreach (Helper::extension_name_list() as $moduleName) {
             $dir = $extensionPath.$moduleName;
             if (file_exists($dir . '/composer.json')) {
                 $composerJson = new JsonFile($dir . '/composer.json');

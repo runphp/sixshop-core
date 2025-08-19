@@ -1,6 +1,6 @@
 <?php
 
-namespace SixShop\core\Exception;
+namespace SixShop\Core\Exception;
 
 use Exception;
 use think\exception\HttpResponseException;

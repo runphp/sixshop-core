@@ -6,7 +6,7 @@
 
 ## 特性
 
-- 提供 \SixShop\core\Entity\BaseEntity 类，作为所有实体的基类。
+- 提供 \SixShop\Core\Entity\BaseEntity 类，作为所有实体的基类。
 
 ## 安装
 

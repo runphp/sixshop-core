@@ -1,33 +1,34 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Service;
+namespace SixShop\Core\Service;
 
-use SixShop\core\Middleware\ExtensionStatusMiddleware;
-use SixShop\core\SixShopKernel;
+use SixShop\Core\Helper;
+use SixShop\Core\Middleware\ExtensionStatusMiddleware;
 use SixShop\Extension\system\ExtensionManager;
+use think\App;
 use think\event\RouteLoaded;
 use think\facade\Route;
 
 class RegisterRouteService
 {
-    public function init(SixShopKernel $app): void
+    public function init(App $app)
     {
         $extensionManager = $app->make(ExtensionManager::class);
-        $app->event->listen(RouteLoaded::class, function () use ($extensionManager, $app) {
+        return function () use ($extensionManager, $app) {
             $appName = $app->http->getName();
-            foreach (module_name_list() as $moduleName) {
-                $extension = $extensionManager->getExtension($moduleName);
+            foreach (Helper::extension_name_list() as $extensionName) {
+                $extension = $extensionManager->getExtension($extensionName);
                 $routes = $extension->getRoutes();
                 if (isset($routes[$appName])) {
                     $routeFile = $routes[$appName];
-                    Route::group($moduleName, function () use ($routeFile) {
+                    Route::group($extensionName, function () use ($routeFile) {
                         include $routeFile;
                     })->middleware(
-                        ExtensionStatusMiddleware::class, $moduleName
+                        ExtensionStatusMiddleware::class, $extensionName
                     );
                 }
             }
-        });
+        };
     }
 }

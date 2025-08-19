@@ -1,26 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Service;
+namespace SixShop\Core\Service;
 
 use ReflectionClass;
 use ReflectionMethod;
-use SixShop\core\Attribute\Hook;
-use SixShop\core\SixShopKernel;
+use SixShop\Core\Attribute\Hook;
+use SixShop\Core\Helper;
 use SixShop\Extension\system\Enum\ExtensionStatusEnum;
 use SixShop\Extension\system\ExtensionManager;
+use think\App;
 use think\facade\Event;
 
 class HookAttributeService
 {
-    public function init(SixShopKernel $app): void
+    public function init(App $app): void
     {
         $extensionManager = $app->make(ExtensionManager::class);
-        foreach (module_name_list() as $moduleName) {
-            if ($extensionManager->getInfo($moduleName)->status !== ExtensionStatusEnum::ENABLED) {
+        foreach (Helper::extension_name_list() as $extensionName) {
+            if ($extensionManager->getInfo($extensionName)->status !== ExtensionStatusEnum::ENABLED) {
                 continue;
             }
-            $extension = $extensionManager->getExtension($moduleName);
+            $extension = $extensionManager->getExtension($extensionName);
             $hookClassList = $extension->getHooks();
             foreach ($hookClassList as $hookClass) {
                 $ref = new ReflectionClass($hookClass);

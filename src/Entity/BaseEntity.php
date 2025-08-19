@@ -1,6 +1,6 @@
 <?php
 
-namespace SixShop\core\Entity;
+namespace SixShop\Core\Entity;
 
 use think\Entity;
 

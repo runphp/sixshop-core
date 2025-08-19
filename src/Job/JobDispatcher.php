@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Job;
+namespace SixShop\Core\Job;
 
 class JobDispatcher
 {

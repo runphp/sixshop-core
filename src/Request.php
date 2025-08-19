@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace SixShop\core;
+namespace SixShop\Core;
 
 use think\helper\Macroable;
 

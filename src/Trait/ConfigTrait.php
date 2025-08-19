@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SixShop\core\Trait;
+namespace SixShop\Core\Trait;
 
 use SixShop\Extension\system\ExtensionManager;
 
