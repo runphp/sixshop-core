@@ -1,6 +1,11 @@
 {
     "name": "six-shop/core",
     "description": "核心扩展",
+    "type": "composer-plugin",
+    "keywords": [
+        "sixshop",
+        "thinkphp"
+    ],
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -15,6 +20,7 @@
     ],
     "require": {
         "php": ">=8.3",
+        "composer-plugin-api": "^2.0",
         "topthink/framework": "^8.1",
         "topthink/think-orm": "^4.0"
     },
@@ -23,6 +29,7 @@
             "services": [
                 "SixShop\\Core\\Service\\CoreService"
             ]
-        }
+        },
+        "class": "SixShop\\Core\\ExtensionInstaller"
     }
 }
