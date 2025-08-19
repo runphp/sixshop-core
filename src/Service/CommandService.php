@@ -3,20 +3,19 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Service;
 
+use SixShop\Core\Helper;
 use SixShop\Extension\system\ExtensionManager;
+use think\App;
 
 class CommandService
 {
-    public function init(App $app): void
+    public function init(App $app, \Closure $closure): void
     {
-        $app->re
-        $commands = $app->config->get('console.commands', []);
         $extensionManager = $app->make(ExtensionManager::class);
-        foreach (module_name_list() as $moduleName) {
-            $commands = array_merge($commands, $extensionManager->getExtension($moduleName)->getCommands());
+        $commands = [];
+        foreach (Helper::extension_name_list() as $extensionName) {
+            $commands += $extensionManager->getExtension($extensionName)->getCommands();
         }
-        $app->config->set([
-            'commands' => $commands
-        ], 'console');
+        $closure($commands);
     }
 }

@@ -34,9 +34,9 @@ class CoreService extends Service
             $this->registerRoutes($this->app->make(RegisterRouteService::class)->init($this->app));
         });
 
-        /*$this->app->make(CommandService::class)->init(function ($commands){
+        $this->app->make(CommandService::class)->init($this->app, function ($commands) {
             $this->commands($commands);
-        });*/
+        });
     }
 
     public function initExtensionList(): void
