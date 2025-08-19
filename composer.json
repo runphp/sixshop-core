@@ -22,10 +22,7 @@
         "think": {
             "services": [
                 "SixShop\\Core\\Service\\CoreService"
-            ],
-            "config":{
-                "captcha": "src/config.php"
-            }
+            ]
         }
     }
 }

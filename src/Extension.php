@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace SixShop\Core;
 
 
-class Extension extends ExtensionAbstract
+use SixShop\Core\Contracts\CoreExtensionInterface;
+
+class Extension extends ExtensionAbstract implements CoreExtensionInterface
 {
     protected function getBaseDir(): string
     {

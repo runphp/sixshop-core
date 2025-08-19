@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SixShop\Core;
 
+use phpDocumentor\Reflection\Types\Self_;
 use SixShop\Core\Exception\LogicException;
 use SixShop\Core\Response\Xml;
 use SixShop\Core\Service\CoreService;
@@ -10,7 +11,7 @@ use think\Container;
 use think\Paginator;
 use think\Response;
 
-class Helper
+final class Helper
 {
 
     /**
@@ -66,10 +67,11 @@ class Helper
 
     /**
      * 抛出逻辑异常
+     * @throws LogicException
      */
     public static function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
     {
-        throw new LogicException(error_response($msg, $status, $code, $data, $httpCode, $header, $options));
+        throw new LogicException(self::error_response($msg, $status, $code, $data, $httpCode, $header, $options));
     }
 
     /**
@@ -154,9 +156,9 @@ class Helper
     }
 
 
-    public static function extension_path()
+    public static function extension_path(string $module = ''): string
     {
-        return CoreService::$extensionPath;
+        return CoreService::$extensionPath . $module . '/';
     }
 
     public static function extension_name_list()
