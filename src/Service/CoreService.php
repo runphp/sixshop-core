@@ -36,7 +36,6 @@ class CoreService extends Service
         $this->app->make(CommandService::class)->init($this->app, function ($commands) {
             $this->commands($commands);
         });
-        $this->loadEnv();
     }
 
     public function initExtensionList(): void
@@ -73,16 +72,6 @@ class CoreService extends Service
             if (file_exists($normalFile)) {
                 self::$extensionNameList = array_merge(self::$extensionNameList, require $normalFile);
             }
-        }
-    }
-
-    public function loadEnv(): void
-    {
-        $envName = (fn() => $this->envName)->bindTo($this->app, $this->app)();
-        $home = getenv('HOME');
-        $envFile = $envName ? $home . '/.env.' . $envName : $home . '/.env';
-        if (is_file($envFile)) {
-            $this->app->env->load($envFile);
         }
     }
 }
