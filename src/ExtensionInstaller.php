@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace SixShop\Core;
 
 use Composer\Installer\LibraryInstaller;
@@ -7,13 +8,17 @@ use Composer\Package\PackageInterface;
 
 class ExtensionInstaller extends LibraryInstaller
 {
-    public function supports(string $packageType)
+    public function supports(string $packageType): bool
     {
-        return $packageType === 'sixshop-extension';
+        return $packageType === $this->type;
     }
 
-    public function getInstallPath(PackageInterface $package)
+    public function getInstallPath(PackageInterface $package): string
     {
-        return 'extension/' . $package->getPrettyName();
+        if (!isset($package->getExtra()['sixshop']['id'])) {
+            throw new \InvalidArgumentException('Extension id not found in extra.sixshop.id');
+        }
+        $id = $package->getExtra()['sixshop']['id'];
+        return 'extension/' . $id;
     }
 }
