@@ -34,7 +34,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $package = $event->getOperation()->getPackage();
         $extra = $package->getExtra();
         if (!isset($extra['sixshop'])) {
-            throw new \RuntimeException('SixShop extension must have "sixshop" extra section.');
+            return true;
         }
         if (!isset($extra['sixshop']['id']) || !isset($extra['sixshop']['class'])) {
             throw new \RuntimeException('Invalid sixshop extension configuration');
