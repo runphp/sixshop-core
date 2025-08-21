@@ -9,6 +9,7 @@ use Composer\InstalledVersions;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
 use Composer\Plugin\PluginInterface;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
@@ -43,8 +44,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $extensionId = $extra['sixshop']['id'];
         $installedPackages = InstalledVersions::getInstalledPackagesByType(self::EXTENSION_TYPE);
         foreach ($installedPackages as $installedPackage) {
-            $installedExtra = $installedPackage->getExtra();
-            if ($installedExtra['sixshop']['id'] === $extensionId) {
+            $installPath = InstalledVersions::getInstallPath($installedPackage);
+            $composerJson = new JsonFile($installPath . '/composer.json');
+            $composer = $composerJson->read();
+            if ($composer['extra']['sixshop']['id'] === $extensionId) {
                 throw new \RuntimeException("Extension ID '{$extensionId}' already exists. Please use a unique ID for your extension.");
             }
         }
