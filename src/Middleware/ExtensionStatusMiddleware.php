@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SixShop\Core\Middleware;
 
 use Closure;
+use SixShop\Core\Helper;
 use SixShop\Extension\system\Enum\ExtensionStatusEnum;
 use SixShop\Extension\system\ExtensionManager;
 
