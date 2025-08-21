@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Trait;
 
-use SixShop\Extension\system\ExtensionManager;
+use SixShop\System\ExtensionManager;
 
 trait ConfigTrait
 {

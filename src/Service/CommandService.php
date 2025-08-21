@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace SixShop\Core\Service;
 
 use SixShop\Core\Helper;
-use SixShop\Extension\system\ExtensionManager;
+use SixShop\System\ExtensionManager;
 use think\App;
 
 class CommandService

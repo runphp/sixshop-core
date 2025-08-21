@@ -7,8 +7,8 @@ use ReflectionClass;
 use ReflectionMethod;
 use SixShop\Core\Attribute\Hook;
 use SixShop\Core\Helper;
-use SixShop\Extension\system\Enum\ExtensionStatusEnum;
-use SixShop\Extension\system\ExtensionManager;
+use SixShop\System\Enum\ExtensionStatusEnum;
+use SixShop\System\ExtensionManager;
 use think\App;
 use think\facade\Event;
 

@@ -5,8 +5,8 @@ namespace SixShop\Core\Middleware;
 
 use Closure;
 use SixShop\Core\Helper;
-use SixShop\Extension\system\Enum\ExtensionStatusEnum;
-use SixShop\Extension\system\ExtensionManager;
+use SixShop\System\Enum\ExtensionStatusEnum;
+use SixShop\System\ExtensionManager;
 
 class ExtensionStatusMiddleware
 {

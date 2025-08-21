@@ -5,7 +5,7 @@ namespace SixShop\Core\Service;
 
 use SixShop\Core\Helper;
 use SixShop\Core\Middleware\ExtensionStatusMiddleware;
-use SixShop\Extension\system\ExtensionManager;
+use SixShop\System\ExtensionManager;
 use think\App;
 use think\event\RouteLoaded;
 use think\facade\Route;
