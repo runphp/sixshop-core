@@ -5,6 +5,7 @@ namespace SixShop\Core;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\InstalledVersions;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
@@ -12,11 +13,11 @@ use Composer\Plugin\PluginInterface;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-
+    public const EXTENSION_TYPE = 'sixshop-extension';
 
     public function activate(Composer $composer, IOInterface $io): void
     {
-        $installer = new ExtensionInstaller($io, $composer, 'sixshop-extension');
+        $installer = new ExtensionInstaller($io, $composer, self::EXTENSION_TYPE);
         $composer->getInstallationManager()->addInstaller($installer);
     }
 
@@ -38,6 +39,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         }
         if (!isset($extra['sixshop']['id']) || !isset($extra['sixshop']['class'])) {
             throw new \RuntimeException('Invalid sixshop extension configuration');
+        }
+        $extensionId = $extra['sixshop']['id'];
+        $installedPackages = InstalledVersions::getInstalledPackagesByType(self::EXTENSION_TYPE);
+        foreach ($installedPackages as $installedPackage) {
+            $installedExtra = $installedPackage->getExtra();
+            if ($installedExtra['sixshop']['id'] === $extensionId) {
+                throw new \RuntimeException("Extension ID '{$extensionId}' already exists. Please use a unique ID for your extension.");
+            }
         }
         return true;
     }
