@@ -45,6 +45,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $installedPackages = InstalledVersions::getInstalledPackagesByType(self::EXTENSION_TYPE);
         foreach ($installedPackages as $installedPackage) {
             $installPath = InstalledVersions::getInstallPath($installedPackage);
+            if (!file_exists($installPath . '/composer.json')) {
+                continue;
+            }
             $composerJson = new JsonFile($installPath . '/composer.json');
             $composer = $composerJson->read();
             if ($composer['extra']['sixshop']['id'] === $extensionId) {
