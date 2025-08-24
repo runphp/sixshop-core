@@ -6,6 +6,7 @@ namespace SixShop\Core\Service;
 use Composer\InstalledVersions;
 use Composer\Json\JsonFile;
 use SixShop\Core\Exception\ExceptionHandle;
+use SixShop\Core\Helper;
 use SixShop\Core\Plugin;
 use SixShop\Core\Request;
 use think\event\HttpRun;
@@ -22,6 +23,8 @@ class CoreService extends Service
     /* @deprecated */
     public static array $extensionNameList = [];
 
+    private static array $normalExtensionNameList = [];
+
     public function register(): void
     {
         $this->app->bind(Handle::class, ExceptionHandle::class);
@@ -35,7 +38,7 @@ class CoreService extends Service
 
     public function boot(): void
     {
-        $this->app->make(AutoloadService::class)->init();
+        $this->app->make(AutoloadService::class)->load(self::$extensionComposerMap,self::$normalExtensionNameList);
         $this->app->make(HookAttributeService::class)->init();
         $this->app->event->trigger('hook_init', $this->app);
         $this->app->event->listen(HttpRun::class, function () {
@@ -58,7 +61,7 @@ class CoreService extends Service
             return;
         }
         foreach (InstalledVersions::getInstalledPackagesByType(Plugin::EXTENSION_TYPE) as $item) {
-            $version = InstalledVersions::getInstallPath($item);
+            //$version = InstalledVersions::getInstallPath($item);
             $installPath = InstalledVersions::getInstallPath($item);
             $composerJson = new JsonFile($installPath . '/composer.json');
             $composer = $composerJson->read();
@@ -77,7 +80,16 @@ class CoreService extends Service
             self::$extensionNameList = array_keys(self::$extensionComposerMap);
             $normalFile = $this->app->getRootPath() . 'runtime/module_name_list_normal.php';
             if (file_exists($normalFile)) {
-                self::$extensionNameList = array_merge(self::$extensionNameList, require $normalFile);
+                $normalExtensionList = require $normalFile;
+                foreach ($normalExtensionList as $item) {
+                    if (array_key_exists($item, self::$extensionComposerMap)) {
+                        continue;
+                    }
+                    if (is_dir( Helper::extension_path($item).'src')) {
+                        self::$extensionNameList[] = $item;
+                        self::$normalExtensionNameList[] = $item;
+                    }
+                }
             }
         }
     }

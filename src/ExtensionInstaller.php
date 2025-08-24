@@ -12,13 +12,4 @@ class ExtensionInstaller extends LibraryInstaller
     {
         return $packageType === $this->type;
     }
-
-    public function getInstallPath(PackageInterface $package): string
-    {
-        if (!isset($package->getExtra()['sixshop']['id'])) {
-            throw new \InvalidArgumentException('Extension id not found in extra.sixshop.id');
-        }
-        $id = $package->getExtra()['sixshop']['id'];
-        return 'extension/' . $id;
-    }
 }

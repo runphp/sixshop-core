@@ -33,27 +33,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function onPrePackageInstall(PackageEvent $event): bool
     {
-        $package = $event->getOperation()->getPackage();
-        $extra = $package->getExtra();
-        if (!isset($extra['sixshop'])) {
-            return true;
-        }
-        if (!isset($extra['sixshop']['id']) || !isset($extra['sixshop']['class'])) {
-            throw new \RuntimeException('Invalid sixshop extension configuration');
-        }
-        $extensionId = $extra['sixshop']['id'];
-        $installedPackages = InstalledVersions::getInstalledPackagesByType(self::EXTENSION_TYPE);
-        foreach ($installedPackages as $installedPackage) {
-            $installPath = InstalledVersions::getInstallPath($installedPackage);
-            if (!file_exists($installPath . '/composer.json')) {
-                continue;
-            }
-            $composerJson = new JsonFile($installPath . '/composer.json');
-            $composer = $composerJson->read();
-            if ($composer['extra']['sixshop']['id'] === $extensionId) {
-                throw new \RuntimeException("Extension ID '{$extensionId}' already exists. Please use a unique ID for your extension.");
-            }
-        }
         return true;
     }
 

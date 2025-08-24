@@ -15,26 +15,16 @@ class AutoloadService
     {
     }
 
-    public function init(): void
+    public function load(array $extensionComposerMap, array $extensionNameList): void
     {
+        foreach ($extensionComposerMap as $extensionID => $composerFile) {
+            $this->app->bind('extension.' . $extensionID, $composerFile['extra']['sixshop']['class']);
+        }
         $extensionPath = Helper::extension_path();
         $classLoader = $this->app->classLoader;
-        foreach (Helper::extension_name_list() as $moduleName) {
+        foreach ($extensionNameList as $moduleName) {
             $dir = $extensionPath . $moduleName;
-            if (file_exists($dir . '/composer.json')) {
-                $composerJson = new JsonFile($dir . '/composer.json');
-                $composer = $composerJson->read();
-                $autoload = $composer['autoload'] ?? [];
-                $autoload['psr-4'] = $autoload['psr-4'] ?? [];
-                foreach ($autoload['psr-4'] as $namespace => $path) {
-                    $classLoader->addPsr4($namespace, $dir . '/' . $path);
-                }
-                $autoload['files'] = $autoload['files'] ?? [];
-                foreach ($autoload['files'] as $file) {
-                    require_once $dir . '/' . $file;
-                }
-                $extensionClass = $composer['extra']['sixshop']['class'];
-            } else {
+            if (!file_exists($dir . '/composer.json')) {
                 $namespace = "SixShop\\Extension\\$moduleName\\";
                 $path = $dir . '/src';
                 if (!isset($classLoader->getPrefixesPsr4()[$namespace])) {
@@ -45,8 +35,8 @@ class AutoloadService
                     }
                 }
                 $extensionClass = $namespace . 'Extension';
+                $this->app->bind('extension.' . $moduleName, $extensionClass);
             }
-            $this->app->bind('extension.' . $moduleName, $extensionClass);
         }
     }
 
