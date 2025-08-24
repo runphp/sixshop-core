@@ -3,30 +3,32 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Service;
 
+use SixShop\Core\Event\BeforeRegisterRouteEvent;
 use SixShop\Core\Helper;
-use SixShop\Core\Middleware\ExtensionStatusMiddleware;
-use SixShop\System\ExtensionManager;
-use think\App;
-use think\event\RouteLoaded;
+use think\facade\Event;
 use think\facade\Route;
+use think\Http;
 
 class RegisterRouteService
 {
-    public function init(App $app)
+    public function __construct(private AutoloadService $autoloadService, private Http $http)
     {
-        $extensionManager = $app->make(ExtensionManager::class);
-        return function () use ($extensionManager, $app) {
-            $appName = $app->http->getName();
+    }
+
+    public function init(): \Closure
+    {
+        return function ()  {
+            $appName = $this->http->getName();
             foreach (Helper::extension_name_list() as $extensionName) {
-                $extension = $extensionManager->getExtension($extensionName);
+                $extension = $this->autoloadService->getExtension($extensionName);
                 $routes = $extension->getRoutes();
                 if (isset($routes[$appName])) {
                     $routeFile = $routes[$appName];
+                    $event = new BeforeRegisterRouteEvent();
+                    Event::trigger($event);
                     Route::group($extensionName, function () use ($routeFile) {
                         include $routeFile;
-                    })->middleware(
-                        ExtensionStatusMiddleware::class, $extensionName
-                    );
+                    })->middleware($event->getMiddlewares(), $extensionName);
                 }
             }
         };

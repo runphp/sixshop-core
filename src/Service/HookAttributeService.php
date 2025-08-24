@@ -7,21 +7,19 @@ use ReflectionClass;
 use ReflectionMethod;
 use SixShop\Core\Attribute\Hook;
 use SixShop\Core\Helper;
-use SixShop\System\Enum\ExtensionStatusEnum;
-use SixShop\System\ExtensionManager;
 use think\App;
-use think\facade\Event;
+use think\Event;
 
 class HookAttributeService
 {
-    public function init(App $app): void
+    public function __construct(private AutoloadService $autoloadService, private Event $event)
     {
-        $extensionManager = $app->make(ExtensionManager::class);
+    }
+
+    public function init(): void
+    {
         foreach (Helper::extension_name_list() as $extensionName) {
-            if ($extensionManager->getInfo($extensionName)->status !== ExtensionStatusEnum::ENABLED) {
-                continue;
-            }
-            $extension = $extensionManager->getExtension($extensionName);
+            $extension = $this->autoloadService->getExtension($extensionName);
             $hookClassList = $extension->getHooks();
             foreach ($hookClassList as $hookClass) {
                 $ref = new ReflectionClass($hookClass);
@@ -30,12 +28,11 @@ class HookAttributeService
                     foreach ($attributes as $attr) {
                         $hookNameList = (array)$attr->newInstance()->hook;
                         foreach ($hookNameList as $hookName) {
-                            Event::listen($hookName, [$hookClass, $method->getName()]);
+                            $this->event->listen($hookName, [$hookClass, $method->getName()]);
                         }
                     }
                 }
             }
         }
-        $app->event->trigger('hook_init', $app);
     }
 }

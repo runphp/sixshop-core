@@ -35,13 +35,14 @@ class CoreService extends Service
 
     public function boot(): void
     {
-        $this->app->make(AutoloadService::class)->init($this->app);
-        $this->app->make(HookAttributeService::class)->init($this->app);
+        $this->app->make(AutoloadService::class)->init();
+        $this->app->make(HookAttributeService::class)->init();
+        $this->app->event->trigger('hook_init', $this->app);
         $this->app->event->listen(HttpRun::class, function () {
             $this->registerRoutes($this->app->make(RegisterRouteService::class)->init($this->app));
         });
 
-        $this->app->make(CommandService::class)->init($this->app, function ($commands) {
+        $this->app->make(CommandService::class)->init(function ($commands) {
             $this->commands($commands);
         });
     }

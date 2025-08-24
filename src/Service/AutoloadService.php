@@ -3,21 +3,24 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Service;
 
-use Composer\InstalledVersions;
-use Composer\Installer;
 use Composer\Json\JsonFile;
+use SixShop\Core\Contracts\ExtensionInterface;
 use SixShop\Core\Helper;
 use think\App;
 
 
 class AutoloadService
 {
-    public function init(App $app): void
+    public function __construct(private App $app)
+    {
+    }
+
+    public function init(): void
     {
         $extensionPath = Helper::extension_path();
-        $classLoader = $app->classLoader;
+        $classLoader = $this->app->classLoader;
         foreach (Helper::extension_name_list() as $moduleName) {
-            $dir = $extensionPath.$moduleName;
+            $dir = $extensionPath . $moduleName;
             if (file_exists($dir . '/composer.json')) {
                 $composerJson = new JsonFile($dir . '/composer.json');
                 $composer = $composerJson->read();
@@ -30,6 +33,7 @@ class AutoloadService
                 foreach ($autoload['files'] as $file) {
                     require_once $dir . '/' . $file;
                 }
+                $extensionClass = $composer['extra']['sixshop']['class'];
             } else {
                 $namespace = "SixShop\\Extension\\$moduleName\\";
                 $path = $dir . '/src';
@@ -40,8 +44,14 @@ class AutoloadService
                         require_once $helperFunctionFile;
                     }
                 }
+                $extensionClass = $namespace . 'Extension';
             }
-            $app->bind('extension.' . $moduleName, $namespace.'Extension');
+            $this->app->bind('extension.' . $moduleName, $extensionClass);
         }
+    }
+
+    public function getExtension(string $moduleName): ExtensionInterface
+    {
+        return $this->app->make('extension.' . $moduleName);
     }
 }

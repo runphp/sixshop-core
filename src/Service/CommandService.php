@@ -4,17 +4,19 @@ declare(strict_types=1);
 namespace SixShop\Core\Service;
 
 use SixShop\Core\Helper;
-use SixShop\System\ExtensionManager;
 use think\App;
 
 class CommandService
 {
-    public function init(App $app, \Closure $closure): void
+    public function __construct(private AutoloadService $autoloadService)
     {
-        $extensionManager = $app->make(ExtensionManager::class);
+    }
+
+    public function init(\Closure $closure): void
+    {
         $commands = [];
         foreach (Helper::extension_name_list() as $extensionName) {
-            $commands += $extensionManager->getExtension($extensionName)->getCommands();
+            $commands += $this->autoloadService->getExtension($extensionName)->getCommands();
         }
         $closure($commands);
     }
