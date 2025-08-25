@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace SixShop\Core;
 
+use Composer\Autoload\ClassLoader;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\InstalledVersions;
-use Composer\Installer\PackageEvent;
-use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
+use Composer\Script\ScriptEvents;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -20,35 +20,57 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $installer = new ExtensionInstaller($io, $composer, self::EXTENSION_TYPE);
         $composer->getInstallationManager()->addInstaller($installer);
+        $io->writeError('<info>activate: ' . $composer->getPackage()->getName() . '</info>');
     }
 
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+        $io->writeError('<info>deactivate: ' . $composer->getPackage()->getName() . '</info>');
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io): void
+    {
+        $io->writeError('<info>uninstall: ' . $composer->getPackage()->getName() . '</info>');
+    }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            PackageEvents::PRE_PACKAGE_INSTALL => 'onPrePackageInstall',
-            PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
+            ScriptEvents::POST_AUTOLOAD_DUMP => 'onPostAutoloadDump',
         ];
     }
 
-    public function onPrePackageInstall(PackageEvent $event): bool
+
+    public function onPostAutoloadDump(Event $event): void
     {
-        return true;
+        $installedSixShopExtensions = [
+            'root' => [],
+            'versions' => []
+        ];
+        $referenceMap = [];
+        foreach (InstalledVersions::getAllRawData() as $installed) {
+            foreach ($installed['versions'] as $name => $package) {
+                if (isset($package['type']) && $package['type'] === self::EXTENSION_TYPE) {
+                    $installedSixShopExtensions['versions'][$name] = $package;
+                    $referenceMap[$name] = $package['reference'];
+                }
+            }
+        }
+        $installedSixShopExtensions['root']['reference'] = hash('md5', json_encode($referenceMap));
+        $filePath = $event->getComposer()->getConfig()->get('vendor-dir') . '/composer/installedSixShop.php';
+        file_put_contents($filePath, '<?php return ' . var_export($installedSixShopExtensions, true) . ';');
     }
 
-    public function onPostPackageInstall(PackageEvent $event): bool
+    /**
+     * @return array{root: array{reference: string}, versions: array<string, array>}
+     */
+    public static function getInstalledSixShopExtensions(): array
     {
-        return true;
-    }
-
-
-    public function deactivate(Composer $composer, IOInterface $io)
-    {
-        // TODO: Implement deactivate() method.
-    }
-
-    public function uninstall(Composer $composer, IOInterface $io)
-    {
-        // TODO: Implement uninstall() method.
+        $vendorDir = key(ClassLoader::getRegisteredLoaders());
+        $filePath = $vendorDir . '/composer/installedSixShop.php';
+        if (file_exists($filePath)) {
+            return require $filePath;
+        }
+        throw new \RuntimeException('Please run "composer dump-autoload" to generate installedSixShop.php');
     }
 }

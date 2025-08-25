@@ -55,7 +55,8 @@ class CoreService extends Service
         if (!empty(self::$extensionComposerMap)) {
             return;
         }
-        $extensionComposerFile = $this->app->getRootPath() . 'runtime/extension_' . InstalledVersions::getRootPackage()['reference'].'.php';
+        $reference = Plugin::getInstalledSixShopExtensions()['root']['reference'];
+        $extensionComposerFile = $this->app->getRootPath() . 'runtime/extension_' .$reference.'.php';
         if (file_exists($extensionComposerFile)) {
             self::$extensionComposerMap = require $extensionComposerFile;
             return;
