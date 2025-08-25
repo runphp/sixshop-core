@@ -95,7 +95,7 @@
    mkdir -p ~/.ddev/homeadditions/.composer && ln -s ~/.composer/auth.json ~/.ddev/homeadditions/.composer/auth.json
    ```
 
-   最后你可以参考`extension/auth.json`这份示例文件,进行修改，这些设置也可以直接在`composer.json`文件设置，最终使用方式请参考composer官方文档。
+   最后你可以参考`doc/auth.json`这份示例文件,进行修改，这些设置也可以直接在`composer.json`文件设置，最终使用方式请参考composer官方文档。
 
 6. 扩展模块的composer.json
    参考其他扩展，不同地方是添加了`"type": "sixshop-extension"`，然后就是
