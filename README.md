@@ -132,6 +132,6 @@
     可以参考`backend/vendor/six-shop/system/command.php`
 
 13. 扩展的配置，默认自动加载扩展目录下`config.php`文件，可以参考`backend/vendor/six-shop/hello/config.php`
-       统一配置的实现目前需要安装`six-sho/system`，后续会单独的扩展包，目前配置的实现是使用 [form-create](https://form-create.com/v3/designer/) 生成配置表单即可，支持子表单组件
+       统一配置的实现目前需要安装`six-shop/system`，后续会单独的扩展包，目前配置的实现是使用 [form-create](https://form-create.com/v3/designer/) 生成配置表单即可，支持子表单组件
 
 ## 欢迎加入我们
