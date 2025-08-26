@@ -37,7 +37,7 @@
     cd backend/runtime/extension
     git clone git@github.com:runphp/sixshop-hello.git
     ```
-3. 在~/.composer/auth.json中添加path仓库(下面以hello为例)
+3. 在`composer.json`中添加path仓库(下面以hello为例)
     ```json
     {
         "repositories": [
@@ -70,22 +70,14 @@
 
 5. 私有扩展模块认证说明
 
-   在 ~/.composer/auth.json 中添加认证信息
+   在 `~/.composer/auth.json` 中添加认证信息
    ```json
    {
-      "repositories": [
-         {
-            "type": "composer",
-            "url": "https://packagist.jd29.com",
-            "options": {
-               "http": {
-                  "header": [
-                     "X-API-KEY: 699d5f8e02a255e657bb2bfad35570bb468e970e72918b2e38797f6a00beb4e4"
-                  ]
-               }
-            }
-         }
-      ]
+      "headers": {
+        "packagist.jd29.com": {
+            "X-API-KEY": "5f280c17d5958****************************************0893f506ca01acef704"
+        }
+     }
    }
    ```
    说明: ddev环境对应的auth.json文件为`~/.ddev/homeadditions/.composer/auth.json`
@@ -94,7 +86,7 @@
    ```shell
    mkdir -p ~/.ddev/homeadditions/.composer && ln -s ~/.composer/auth.json ~/.ddev/homeadditions/.composer/auth.json
    ```
-
+   然后需要`ddev start`重启下容器，可以通过`ddev composer config -l`查看是否生效
    最后你可以参考`doc/auth.json`这份示例文件,进行修改，这些设置也可以直接在`composer.json`文件设置，最终使用方式请参考composer官方文档。
 
 6. 扩展模块的composer.json
