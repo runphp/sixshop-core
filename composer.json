@@ -22,7 +22,8 @@
         "php": ">=8.3",
         "composer-plugin-api": "^2.0",
         "topthink/framework": "^8.1",
-        "topthink/think-orm": "^4.0"
+        "topthink/think-orm": "^4.0",
+        "composer/composer": "^2.8.11"
     },
     "extra": {
         "think": {
