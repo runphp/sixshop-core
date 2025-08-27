@@ -162,9 +162,9 @@ final class Helper
         $extensionName = CoreService::$extensionComposerMap[$extensionID]['name'];
         $versions = Plugin::getInstalledSixShopExtensions()['versions'];
 
-        return isset($versions[$extensionName]['install_path'])
-            ? realpath($versions[$extensionName]['install_path'])
-            : CoreService::$extensionPath . $extensionID . DIRECTORY_SEPARATOR;
+        return (isset($versions[$extensionName]['install_path'])
+                ? realpath($versions[$extensionName]['install_path'])
+                : CoreService::$extensionPath . $extensionID) . DIRECTORY_SEPARATOR;
 
     }
 
