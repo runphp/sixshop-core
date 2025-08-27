@@ -18,6 +18,9 @@ class CoreService extends Service
 {
     public static string $extensionPath;
 
+    /**
+     * @var array<string, array{name:string}>
+     */
     public static array $extensionComposerMap = [];
 
     /* @deprecated */
@@ -33,7 +36,7 @@ class CoreService extends Service
             require $this->app->getRootPath() . 'vendor/autoload.php');
         self::$extensionPath = $this->app->getRootPath() . 'extension' . DIRECTORY_SEPARATOR;
         $this->initExtensionList();
-        $this->compatibleExtensNameList();
+        $this->compatibleExtensionNameList();
     }
 
     public function boot(): void
@@ -75,7 +78,7 @@ class CoreService extends Service
     }
 
     /* @deprecated */
-    private function compatibleExtensNameList(): void
+    private function compatibleExtensionNameList(): void
     {
         if (empty(self::$extensionNameList)) {
             self::$extensionNameList = array_keys(self::$extensionComposerMap);

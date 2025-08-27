@@ -16,6 +16,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 {
     public const EXTENSION_TYPE = 'sixshop-extension';
 
+    public static array $installedSixShopExtensions = [];
+
     public function activate(Composer $composer, IOInterface $io): void
     {
         $installer = new ExtensionInstaller($io, $composer, self::EXTENSION_TYPE);
@@ -66,10 +68,13 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public static function getInstalledSixShopExtensions(): array
     {
+        if (self::$installedSixShopExtensions) {
+            return self::$installedSixShopExtensions;
+        }
         $vendorDir = key(ClassLoader::getRegisteredLoaders());
         $filePath = $vendorDir . '/composer/installedSixShop.php';
         if (file_exists($filePath)) {
-            return require $filePath;
+            return self::$installedSixShopExtensions = require $filePath;
         }
         throw new \RuntimeException('Please run "composer dump-autoload" to generate installedSixShop.php');
     }

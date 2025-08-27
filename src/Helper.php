@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SixShop\Core;
 
-use phpDocumentor\Reflection\Types\Self_;
 use SixShop\Core\Exception\LogicException;
 use SixShop\Core\Response\Xml;
 use SixShop\Core\Service\CoreService;
@@ -155,10 +154,18 @@ final class Helper
         return str_shuffle($password);
     }
 
-
-    public static function extension_path(string $module = ''): string
+    public static function extension_path(string $extensionID = ''): string
     {
-        return CoreService::$extensionPath . $module . '/';
+        if (!$extensionID) {
+            return CoreService::$extensionPath;
+        }
+        $extensionName = CoreService::$extensionComposerMap[$extensionID]['name'];
+        $versions = Plugin::getInstalledSixShopExtensions()['versions'];
+
+        return isset($versions[$extensionName]['install_path'])
+            ? realpath($versions[$extensionName]['install_path'])
+            : CoreService::$extensionPath . $extensionID . DIRECTORY_SEPARATOR;
+
     }
 
     public static function extension_name_list()
