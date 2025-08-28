@@ -159,13 +159,14 @@ final class Helper
         if (!$extensionID) {
             return CoreService::$extensionPath;
         }
-        $extensionName = CoreService::$extensionComposerMap[$extensionID]['name'];
-        $versions = Plugin::getInstalledSixShopExtensions()['versions'];
-
-        return (isset($versions[$extensionName]['install_path'])
-                ? realpath($versions[$extensionName]['install_path'])
-                : CoreService::$extensionPath . $extensionID) . DIRECTORY_SEPARATOR;
-
+        if (isset(CoreService::$extensionComposerMap[$extensionID]['name'])) {
+            $extensionName = CoreService::$extensionComposerMap[$extensionID]['name'];
+            $versions = Plugin::getInstalledSixShopExtensions()['versions'];
+            if (isset($versions[$extensionName]['install_path'])) {
+                return realpath($versions[$extensionName]['install_path']) . DIRECTORY_SEPARATOR;
+            }
+        }
+        return CoreService::$extensionPath . $extensionID . DIRECTORY_SEPARATOR;
     }
 
     public static function extension_name_list()
