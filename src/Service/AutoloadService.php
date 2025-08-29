@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Service;
 
-use Composer\Json\JsonFile;
 use SixShop\Core\Contracts\ExtensionInterface;
 use SixShop\Core\Helper;
 use think\App;

@@ -5,6 +5,7 @@ namespace SixShop\Core\Service;
 
 use SixShop\Core\Helper;
 use think\App;
+use think\exception\ClassNotFoundException;
 
 class CommandService
 {
@@ -16,7 +17,12 @@ class CommandService
     {
         $commands = [];
         foreach (Helper::extension_name_list() as $extensionName) {
-            $commands += $this->autoloadService->getExtension($extensionName)->getCommands();
+            try {
+                $extension = $this->autoloadService->getExtension($extensionName);
+            } catch (ClassNotFoundException $_) {
+                continue;
+            }
+            $commands += $extension->getCommands();
         }
         $closure($commands);
     }

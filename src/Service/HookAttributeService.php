@@ -7,10 +7,10 @@ use ReflectionClass;
 use ReflectionMethod;
 use SixShop\Core\Attribute\Hook;
 use SixShop\Core\Helper;
-use think\App;
 use think\Event;
+use think\exception\ClassNotFoundException;
 
-class HookAttributeService
+readonly class HookAttributeService
 {
     public function __construct(private AutoloadService $autoloadService, private Event $event)
     {
@@ -19,7 +19,11 @@ class HookAttributeService
     public function init(): void
     {
         foreach (Helper::extension_name_list() as $extensionName) {
-            $extension = $this->autoloadService->getExtension($extensionName);
+            try {
+                $extension = $this->autoloadService->getExtension($extensionName);
+            } catch (ClassNotFoundException $_) {
+                continue;
+            }
             $hookClassList = $extension->getHooks();
             foreach ($hookClassList as $hookClass) {
                 $ref = new ReflectionClass($hookClass);
