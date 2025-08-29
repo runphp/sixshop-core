@@ -10,11 +10,114 @@ use think\Container;
 use think\Paginator;
 use think\Response;
 
+// 函数版本的Helper方法
+
+
+/**
+ * 返回成功数据
+ */
+function success_response(mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success', string $type = 'json', string $xslt = ''): Response
+{
+    return Helper::success_response($data, $status, $code, $msg, $type, $xslt);
+}
+
+
+/**
+ * 返回分页数据
+ */
+function page_response(Paginator $page, mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success'): Response
+{
+    return Helper::page_response($page, $data, $status, $code, $msg);
+}
+
+
+/**
+ * 返回失败数据
+ */
+function error_response(string $msg = 'error', string $status = 'error', int $code = 1, mixed $data = [], int $httpCode = 400, $header = [], $options = []): Response
+{
+    return Helper::error_response($msg, $status, $code, $data, $httpCode, $header, $options);
+}
+
+
+/**
+ * 抛出逻辑异常
+ * @throws LogicException
+ */
+function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
+{
+    Helper::throw_logic_exception($msg, $code, $status, $data, $httpCode, $header, $options);
+}
+
+
+/**
+ * 构建树形结构选项
+ * @param array $data 数据源
+ * @param string $valueField 值字段
+ * @param string $labelField 标签字段
+ * @param string $parentField 父字段
+ * @param int $parentId 父ID
+ * @param string $childrenKey 子节点键
+ * @param bool $preserveOriginal 是否保留原始数据
+ */
+function build_tree_options(
+    array  $data,
+    string $valueField = 'id',
+    string $labelField = 'name',
+    string $parentField = 'parent_id',
+    int    $parentId = 0,
+    string $childrenKey = 'children',
+    bool   $preserveOriginal = true
+): array
+{
+    return Helper::build_tree_options($data, $valueField, $labelField, $parentField, $parentId, $childrenKey, $preserveOriginal);
+}
+
+
+/**
+ * 生成随机密码
+ * @param int $length 密码长度
+ * @return string 生成的密码
+ */
+function secret_password(int $length = 16): string
+{
+    return Helper::secret_password($length);
+}
+
+
+/**
+ * 获取扩展路径
+ */
+function extension_path(string $extensionID = ''): string
+{
+    return Helper::extension_path($extensionID);
+}
+
+
+/**
+ * 获取扩展名称列表
+ */
+function extension_name_list(): array
+{
+    return CoreService::$extensionNameList;
+}
+
+
+/**
+ * 获取扩展Composer信息
+ */
+function extension_composer_info(string $extensionID): array
+{
+    return CoreService::$extensionComposerMap[$extensionID];
+}
+
+
 final class Helper
 {
 
     /**
      * 返回成功数据
+     * @deprecated 函数已弃用, 请使用 success_response()
      */
     public static function success_response(mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success', string $type = 'json', string $xslt = ''): Response
     {
@@ -39,6 +142,7 @@ final class Helper
 
     /**
      * 返回分页数据
+     * @deprecated 函数已弃用, 请使用 page_response()
      */
     public static function page_response(Paginator $page, mixed $data = [], string $status = 'ok', int $code = 200, string $msg = 'success'): Response
     {
@@ -53,6 +157,7 @@ final class Helper
 
     /**
      * 返回失败数据
+     * @deprecated 函数已弃用, 请使用 error_response()
      */
     public static function error_response(string $msg = 'error', string $status = 'error', int $code = 1, mixed $data = [], int $httpCode = 400, $header = [], $options = []): Response
     {
@@ -67,6 +172,7 @@ final class Helper
     /**
      * 抛出逻辑异常
      * @throws LogicException
+     * @deprecated 函数已弃用, 请使用 throw_logic_exception()
      */
     public static function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
     {
@@ -82,6 +188,8 @@ final class Helper
      * @param int $parentId 父ID
      * @param string $childrenKey 子节点键
      * @param bool $preserveOriginal 是否保留原始数据
+     *
+     * @deprecated 函数已弃用, 请使用 build_tree_options()
      */
     public static function build_tree_options(
         array  $data,
@@ -129,6 +237,7 @@ final class Helper
      * 生成随机密码
      * @param int $length 密码长度
      * @return string 生成的密码
+     * @deprecated 函数已弃用, 请使用 secret_password()
      */
     public static function secret_password(int $length = 16): string
     {
@@ -154,6 +263,12 @@ final class Helper
         return str_shuffle($password);
     }
 
+    /**
+     * 获取插件目录
+     * @param string $extensionID 插件ID
+     * @return string 插件目录
+     * @deprecated 函数已弃用, 请使用 extension_path()
+     */
     public static function extension_path(string $extensionID = ''): string
     {
         if (!$extensionID) {
@@ -169,7 +284,11 @@ final class Helper
         return CoreService::$extensionPath . $extensionID . DIRECTORY_SEPARATOR;
     }
 
-    public static function extension_name_list()
+    /**
+     *
+     * @deprecated 废弃方法，请使用 extension_name_list 方法
+     */
+    public static function extension_name_list(): array
     {
         return CoreService::$extensionNameList;
     }

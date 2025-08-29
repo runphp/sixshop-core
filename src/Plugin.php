@@ -22,17 +22,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $installer = new ExtensionInstaller($io, $composer, self::EXTENSION_TYPE);
         $composer->getInstallationManager()->addInstaller($installer);
-        $io->writeError('<info>activate: ' . $composer->getPackage()->getName() . '</info>');
     }
 
-    public function deactivate(Composer $composer, IOInterface $io)
+    public function deactivate(Composer $composer, IOInterface $io): void
     {
-        $io->writeError('<info>deactivate: ' . $composer->getPackage()->getName() . '</info>');
     }
 
     public function uninstall(Composer $composer, IOInterface $io): void
     {
-        $io->writeError('<info>uninstall: ' . $composer->getPackage()->getName() . '</info>');
     }
 
     public static function getSubscribedEvents(): array

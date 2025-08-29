@@ -45,7 +45,7 @@ class CoreService extends Service
         $this->app->make(HookAttributeService::class)->init();
         $this->app->event->trigger('hook_init', $this->app);
         $this->app->event->listen(HttpRun::class, function () {
-            $this->registerRoutes($this->app->make(RegisterRouteService::class)->init($this->app));
+            $this->registerRoutes($this->app->make(RegisterRouteService::class)->init());
         });
 
         $this->app->make(CommandService::class)->init(function ($commands) {
@@ -58,14 +58,20 @@ class CoreService extends Service
         if (!empty(self::$extensionComposerMap)) {
             return;
         }
+        $runtimePath = $this->app->getRootPath() . 'runtime/';
         $reference = Plugin::getInstalledSixShopExtensions()['root']['reference'];
-        $extensionComposerFile = $this->app->getRootPath() . 'runtime/extension_' .$reference.'.php';
+        $extensionComposerFile = $runtimePath . 'extension_' .$reference.'.php';
         if (file_exists($extensionComposerFile)) {
             self::$extensionComposerMap = require $extensionComposerFile;
             return;
         }
+        $files = array_diff(scandir($runtimePath), ['.', '..']);
+        foreach ($files as $file) {
+            if (strpos($file, 'extension_') === 0 && substr($file, -4) === '.php') {
+                unlink($runtimePath . $file);
+            }
+        }
         foreach (InstalledVersions::getInstalledPackagesByType(Plugin::EXTENSION_TYPE) as $item) {
-            //$version = InstalledVersions::getInstallPath($item);
             $installPath = InstalledVersions::getInstallPath($item);
             $composerJson = new JsonFile($installPath . '/composer.json');
             $composer = $composerJson->read();
