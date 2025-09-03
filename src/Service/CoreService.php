@@ -19,7 +19,7 @@ class CoreService extends Service
     public static string $extensionPath;
 
     /**
-     * @var array<string, array{name:string}>
+     * @var array<string, array{name:string,version:string}>
      */
     public static array $extensionComposerMap = [];
 
@@ -51,6 +51,11 @@ class CoreService extends Service
         $this->app->make(CommandService::class)->init(function ($commands) {
             $this->commands($commands);
         });
+    }
+
+    public static function getExtensionComposerMap(): array
+    {
+        return self::$extensionComposerMap;
     }
 
     private function initExtensionList(): void

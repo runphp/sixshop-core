@@ -111,7 +111,10 @@ function extension_composer_info(string $extensionID): array
     return CoreService::$extensionComposerMap[$extensionID];
 }
 
-
+/**
+ * 助手类
+ * @deprecated 类已弃用, 请使用函数版本的助手方法
+ */
 final class Helper
 {
 
