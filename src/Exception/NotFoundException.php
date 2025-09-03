@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SixShop\Core\Exception;
 
@@ -8,8 +9,13 @@ use function SixShop\Core\error_response;
 
 class NotFoundException extends HttpResponseException
 {
-    public function __construct(Exception $e)
+    public function __construct(Exception|string $e)
     {
-        parent::__construct(error_response(msg:$e->getMessage(),  status: 'not_found', code: 404, httpCode: 200));
+        if (is_string($e)) {
+            $msg = $e;
+        } else {
+            $msg = $e->getMessage();
+        }
+        parent::__construct(error_response(msg: $msg, status: 'not_found', code: 404, httpCode: 200));
     }
 }
