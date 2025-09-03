@@ -8,6 +8,7 @@ use think\exception\ValidateException;
 use think\Request;
 use think\Response;
 use Throwable;
+use function SixShop\Core\error_response;
 
 class ExceptionHandle extends Handle
 {
