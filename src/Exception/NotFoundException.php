@@ -4,6 +4,7 @@ namespace SixShop\Core\Exception;
 
 use Exception;
 use think\exception\HttpResponseException;
+use function SixShop\Core\error_response;
 
 class NotFoundException extends HttpResponseException
 {
