@@ -21,7 +21,10 @@ readonly class HookAttributeService
         foreach (Helper::extension_name_list() as $extensionName) {
             try {
                 $extension = $this->autoloadService->getExtension($extensionName);
-            } catch (ClassNotFoundException $_) {
+            } catch (ClassNotFoundException) {
+                continue;
+            }
+            if (!$extension->available()) {
                 continue;
             }
             $hookClassList = $extension->getHooks();

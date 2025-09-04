@@ -1,45 +1,45 @@
 {
-    "name": "six-shop/core",
-    "description": "核心扩展",
-    "type": "composer-plugin",
-    "keywords": [
-        "sixshop",
-        "thinkphp"
-    ],
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "SixShop\\Core\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "hui he",
-            "email": "runphp@qq.com"
-        }
-    ],
-    "require": {
-        "php": ">=8.3",
-        "composer-plugin-api": "^2.0",
-        "composer/composer": "^2.8.11",
-        "topthink/framework": "^8.1",
-        "topthink/think-orm": "^4.0",
-        "topthink/think-helper": "^3.1.11",
-        "topthink/think-ide-helper": "^2.0",
-        "topthink/think-migration": "^3.1.1",
-        "topthink/think-multi-app": "^1.1.1",
-        "topthink/think-queue": "^3.0.12",
-        "topthink/think-view": "^2.0.5",
-        "topthink/think-worker": "^5.0.2",
-        "opis/closure": "^4.3.1",
-        "workerman/crontab": "^1.0.7"
-    },
-    "extra": {
-        "think": {
-            "services": [
-                "SixShop\\Core\\Service\\CoreService"
-            ]
-        },
-        "class": "SixShop\\Core\\Plugin"
+  "name": "six-shop/core",
+  "description": "核心扩展",
+  "type": "composer-plugin",
+  "keywords": [
+    "sixshop",
+    "thinkphp"
+  ],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "SixShop\\Core\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "hui he",
+      "email": "runphp@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "composer-plugin-api": "^2.0",
+    "composer/composer": "^2.8.11",
+    "topthink/framework": "^8.1",
+    "topthink/think-orm": "^4.0",
+    "topthink/think-helper": "^3.1.11",
+    "topthink/think-ide-helper": "^2.0",
+    "topthink/think-migration": "^3.1.1",
+    "topthink/think-multi-app": "^1.1.1",
+    "topthink/think-queue": "^3.0.12",
+    "topthink/think-view": "^2.0.5",
+    "topthink/think-worker": "^5.0.2",
+    "opis/closure": "^4.3.1",
+    "workerman/crontab": "^1.0.7"
+  },
+  "extra": {
+    "think": {
+      "services": [
+        "SixShop\\Core\\Service\\CoreService"
+      ]
+    },
+    "class": "SixShop\\Core\\Plugin"
+  }
 }

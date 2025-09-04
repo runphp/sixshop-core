@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace SixShop\Core\Exception;
 
 use think\db\exception\ModelNotFoundException;
@@ -18,7 +19,7 @@ class ExceptionHandle extends Handle
             $e = new NotFoundException($e);
         }
         if ($e instanceof ValidateException) {
-            $e = new LogicException(error_response(msg:$e->getMessage(),  status: 'invalid_argument', code: 400, httpCode: 200));
+            $e = new LogicException(error_response(msg: $e->getMessage(), status: 'invalid_argument', code: 400, httpCode: 200));
         }
         return parent::render($request, $e);
     }

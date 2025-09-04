@@ -21,6 +21,9 @@ class CommandService
             } catch (ClassNotFoundException $_) {
                 continue;
             }
+            if (!$extension->available()) {
+                continue;
+            }
             $commands += $extension->getCommands();
         }
         $closure($commands);

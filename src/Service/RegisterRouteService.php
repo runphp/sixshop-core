@@ -17,10 +17,13 @@ class RegisterRouteService
 
     public function init(): \Closure
     {
-        return function ()  {
+        return function () {
             $appName = $this->http->getName();
             foreach (Helper::extension_name_list() as $extensionName) {
                 $extension = $this->autoloadService->getExtension($extensionName);
+                if (!$extension->available()) {
+                    continue;
+                }
                 $routes = $extension->getRoutes();
                 if (isset($routes[$appName])) {
                     $routeFile = $routes[$appName];

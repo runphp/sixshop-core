@@ -8,5 +8,7 @@ class Hook
 {
     public function __construct(
         public string|array $hook,
-    ) {}
+    )
+    {
+    }
 }

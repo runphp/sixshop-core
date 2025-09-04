@@ -7,10 +7,11 @@ class JobDispatcher
 {
     public function __construct(
         private readonly string $jobClass,
-        private readonly mixed $data = null,
-        private int $delay = 0,
-        private ?string $queue = null
-    ) {
+        private readonly mixed  $data = null,
+        private int             $delay = 0,
+        private ?string         $queue = null
+    )
+    {
     }
 
     /**

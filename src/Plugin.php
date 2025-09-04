@@ -18,6 +18,29 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public static array $installedSixShopExtensions = [];
 
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            ScriptEvents::POST_AUTOLOAD_DUMP => 'onPostAutoloadDump',
+        ];
+    }
+
+    /**
+     * @return array{root: array{reference: string}, versions: array<string, array>}
+     */
+    public static function getInstalledSixShopExtensions(): array
+    {
+        if (self::$installedSixShopExtensions) {
+            return self::$installedSixShopExtensions;
+        }
+        $vendorDir = key(ClassLoader::getRegisteredLoaders());
+        $filePath = $vendorDir . '/composer/installedSixShop.php';
+        if (file_exists($filePath)) {
+            return self::$installedSixShopExtensions = require $filePath;
+        }
+        throw new \RuntimeException('Please run "composer dump-autoload" to generate installedSixShop.php');
+    }
+
     public function activate(Composer $composer, IOInterface $io): void
     {
         $installer = new ExtensionInstaller($io, $composer, self::EXTENSION_TYPE);
@@ -31,14 +54,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function uninstall(Composer $composer, IOInterface $io): void
     {
     }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            ScriptEvents::POST_AUTOLOAD_DUMP => 'onPostAutoloadDump',
-        ];
-    }
-
 
     public function onPostAutoloadDump(Event $event): void
     {
@@ -58,21 +73,5 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $installedSixShopExtensions['root']['reference'] = hash('md5', json_encode($referenceMap));
         $filePath = $event->getComposer()->getConfig()->get('vendor-dir') . '/composer/installedSixShop.php';
         file_put_contents($filePath, '<?php return ' . var_export($installedSixShopExtensions, true) . ';');
-    }
-
-    /**
-     * @return array{root: array{reference: string}, versions: array<string, array>}
-     */
-    public static function getInstalledSixShopExtensions(): array
-    {
-        if (self::$installedSixShopExtensions) {
-            return self::$installedSixShopExtensions;
-        }
-        $vendorDir = key(ClassLoader::getRegisteredLoaders());
-        $filePath = $vendorDir . '/composer/installedSixShop.php';
-        if (file_exists($filePath)) {
-            return self::$installedSixShopExtensions = require $filePath;
-        }
-        throw new \RuntimeException('Please run "composer dump-autoload" to generate installedSixShop.php');
     }
 }

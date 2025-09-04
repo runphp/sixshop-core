@@ -37,6 +37,11 @@ class AutoloadService
                 $this->app->bind('extension.' . $moduleName, $extensionClass);
             }
         }
+        foreach ($extensionComposerMap + $extensionNameList as $moduleName => $_) {
+            $extension = $this->getExtension($moduleName);
+            $extension->boot();
+            $this->app->event->trigger('extension.boot', $extension);
+        }
     }
 
     public function getExtension(string $moduleName): ExtensionInterface

@@ -159,6 +159,16 @@ final class Helper
     }
 
     /**
+     * 抛出逻辑异常
+     * @throws LogicException
+     * @deprecated 函数已弃用, 请使用 throw_logic_exception()
+     */
+    public static function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
+    {
+        throw new LogicException(self::error_response($msg, $status, $code, $data, $httpCode, $header, $options));
+    }
+
+    /**
      * 返回失败数据
      * @deprecated 函数已弃用, 请使用 error_response()
      */
@@ -170,16 +180,6 @@ final class Helper
             'msg' => $msg,
             'data' => $data
         ], $httpCode, $header, $options);
-    }
-
-    /**
-     * 抛出逻辑异常
-     * @throws LogicException
-     * @deprecated 函数已弃用, 请使用 throw_logic_exception()
-     */
-    public static function throw_logic_exception(string $msg = 'error', int $code = 1, string $status = 'error', mixed $data = [], int $httpCode = 200, $header = [], $options = []): void
-    {
-        throw new LogicException(self::error_response($msg, $status, $code, $data, $httpCode, $header, $options));
     }
 
     /**

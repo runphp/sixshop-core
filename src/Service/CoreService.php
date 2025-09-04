@@ -11,7 +11,6 @@ use SixShop\Core\Plugin;
 use SixShop\Core\Request;
 use think\event\HttpRun;
 use think\exception\Handle;
-use think\facade\Event;
 use think\Service;
 
 class CoreService extends Service
@@ -28,6 +27,11 @@ class CoreService extends Service
 
     private static array $normalExtensionNameList = [];
 
+    public static function getExtensionComposerMap(): array
+    {
+        return self::$extensionComposerMap;
+    }
+
     public function register(): void
     {
         $this->app->bind(Handle::class, ExceptionHandle::class);
@@ -39,25 +43,6 @@ class CoreService extends Service
         $this->compatibleExtensionNameList();
     }
 
-    public function boot(): void
-    {
-        $this->app->make(AutoloadService::class)->load(self::$extensionComposerMap,self::$normalExtensionNameList);
-        $this->app->make(HookAttributeService::class)->init();
-        $this->app->event->trigger('hook_init', $this->app);
-        $this->app->event->listen(HttpRun::class, function () {
-            $this->registerRoutes($this->app->make(RegisterRouteService::class)->init());
-        });
-
-        $this->app->make(CommandService::class)->init(function ($commands) {
-            $this->commands($commands);
-        });
-    }
-
-    public static function getExtensionComposerMap(): array
-    {
-        return self::$extensionComposerMap;
-    }
-
     private function initExtensionList(): void
     {
         if (!empty(self::$extensionComposerMap)) {
@@ -65,7 +50,7 @@ class CoreService extends Service
         }
         $runtimePath = $this->app->getRootPath() . 'runtime/';
         $reference = Plugin::getInstalledSixShopExtensions()['root']['reference'];
-        $extensionComposerFile = $runtimePath . 'extension_' .$reference.'.php';
+        $extensionComposerFile = $runtimePath . 'extension_' . $reference . '.php';
         if (file_exists($extensionComposerFile)) {
             self::$extensionComposerMap = require $extensionComposerFile;
             return;
@@ -100,12 +85,26 @@ class CoreService extends Service
                     if (array_key_exists($item, self::$extensionComposerMap)) {
                         continue;
                     }
-                    if (is_dir( Helper::extension_path($item).'src')) {
+                    if (is_dir(Helper::extension_path($item) . 'src')) {
                         self::$extensionNameList[] = $item;
                         self::$normalExtensionNameList[] = $item;
                     }
                 }
             }
         }
+    }
+
+    public function boot(): void
+    {
+        $this->app->make(AutoloadService::class)->load(self::$extensionComposerMap, self::$normalExtensionNameList);
+        $this->app->make(HookAttributeService::class)->init();
+        $this->app->event->trigger('hook_init', $this->app);
+        $this->app->event->listen(HttpRun::class, function () {
+            $this->registerRoutes($this->app->make(RegisterRouteService::class)->init());
+        });
+
+        $this->app->make(CommandService::class)->init(function ($commands) {
+            $this->commands($commands);
+        });
     }
 }

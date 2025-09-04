@@ -48,4 +48,9 @@ interface ExtensionInterface
      * 获取扩展计划任务
      */
     public function getCronJobs(): array;
+
+    /**
+     * 启动扩展
+     */
+    public function boot(): void;
 }

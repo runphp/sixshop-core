@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Job;
 
+use Closure;
 use think\facade\Log;
 use think\queue\Job;
 use function Opis\Closure\{serialize, unserialize};
-use Closure;
 
 /**
  * @template T
@@ -26,36 +26,18 @@ abstract class BaseJob
     protected bool $isClosure = false;
 
     /**
-     * 任务失败处理方法 - 子类可重写
+     * 分发任务
      *
      * @param T $data 任务数据
+     * @param int $delay 延迟时间
+     * @param string|null $queue 队列名称
      */
-    protected function onFailed(mixed $data): void
+    public static function dispatch(mixed $data = '', int $delay = 0, ?string $queue = null): JobDispatcher
     {
-        // 默认失败处理逻辑
-        Log::error('队列任务执行失败: ' . static::class, (array)$data);
-    }
-
-    /**
-     * 任务前置处理 - 子类可重写
-     *
-     * @param T $data 任务数据
-     * @return bool 是否继续执行
-     */
-    protected function beforeExecute(mixed $data): bool
-    {
-        return true;
-    }
-
-    /**
-     * 任务后置处理 - 子类可重写
-     *
-     * @param T $data 任务数据
-     * @param mixed $result 执行结果
-     */
-    protected function afterExecute(mixed $data, mixed $result): void
-    {
-        // 可以在这里添加通用的后置处理逻辑
+        if ($data instanceof Closure) {
+            $data = serialize($data);
+        }
+        return new JobDispatcher(static ::class, $data, $delay, $queue);
     }
 
     /**
@@ -93,18 +75,25 @@ abstract class BaseJob
     }
 
     /**
-     * 分发任务
+     * 任务前置处理 - 子类可重写
      *
      * @param T $data 任务数据
-     * @param int $delay 延迟时间
-     * @param string|null $queue 队列名称
+     * @return bool 是否继续执行
      */
-    public static function dispatch(mixed $data = '', int $delay = 0, ?string $queue = null): JobDispatcher
+    protected function beforeExecute(mixed $data): bool
     {
-        if ($data instanceof Closure) {
-            $data = serialize($data);
-        }
-        return new JobDispatcher(static ::class, $data, $delay, $queue);
+        return true;
+    }
+
+    /**
+     * 任务后置处理 - 子类可重写
+     *
+     * @param T $data 任务数据
+     * @param mixed $result 执行结果
+     */
+    protected function afterExecute(mixed $data, mixed $result): void
+    {
+        // 可以在这里添加通用的后置处理逻辑
     }
 
     /**
@@ -138,6 +127,17 @@ abstract class BaseJob
                 }
             }
         }
+    }
+
+    /**
+     * 任务失败处理方法 - 子类可重写
+     *
+     * @param T $data 任务数据
+     */
+    protected function onFailed(mixed $data): void
+    {
+        // 默认失败处理逻辑
+        Log::error('队列任务执行失败: ' . static::class, (array)$data);
     }
 
     /**

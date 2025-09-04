@@ -4,10 +4,18 @@ declare(strict_types=1);
 namespace SixShop\Core;
 
 use SixShop\Core\Contracts\ExtensionInterface;
+use think\helper\Macroable;
 
+/**
+ * @method bool available() 扩展是否可用
+ */
 abstract class ExtensionAbstract implements ExtensionInterface
 {
-    private array $info;
+    use Macroable;
+
+    protected array $info;
+
+    protected bool $isBooted = false;
 
     public function getInfo(): array
     {
@@ -45,9 +53,10 @@ abstract class ExtensionAbstract implements ExtensionInterface
         }
         return require $this->getBaseDir() . '/command.php';
     }
+
     public function getHooks(): array
     {
-        return  [];
+        return [];
     }
 
     /**
@@ -71,5 +80,10 @@ abstract class ExtensionAbstract implements ExtensionInterface
     public function getCronJobs(): array
     {
         return [];
+    }
+
+    public function boot(): void
+    {
+        $this->isBooted = true;
     }
 }
