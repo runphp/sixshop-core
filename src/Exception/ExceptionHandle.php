@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SixShop\Core\Exception;
 
+use think\cors\HandleCors;
 use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;
 use think\exception\ValidateException;
@@ -21,7 +22,10 @@ class ExceptionHandle extends Handle
         if ($e instanceof ValidateException) {
             $e = new LogicException(error_response(msg: $e->getMessage(), status: 'invalid_argument', code: 400, httpCode: 200));
         }
-        return parent::render($request, $e);
+        $response = parent::render($request, $e);
+        return $this->app->make(HandleCors::class)->handle($request, function () use ($request, $response) {
+            return $response;
+        });
     }
 
     protected function getDebugMsg(Throwable $exception): array
