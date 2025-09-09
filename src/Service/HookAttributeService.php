@@ -6,9 +6,9 @@ namespace SixShop\Core\Service;
 use ReflectionClass;
 use ReflectionMethod;
 use SixShop\Core\Attribute\Hook;
-use SixShop\Core\Helper;
 use think\Event;
 use think\exception\ClassNotFoundException;
+use function SixShop\Core\extension_name_list;
 
 readonly class HookAttributeService
 {
@@ -18,7 +18,7 @@ readonly class HookAttributeService
 
     public function init(): void
     {
-        foreach (Helper::extension_name_list() as $extensionName) {
+        foreach (extension_name_list() as $extensionName) {
             try {
                 $extension = $this->autoloadService->getExtension($extensionName);
             } catch (ClassNotFoundException) {
