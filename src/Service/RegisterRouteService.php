@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace SixShop\Core\Service;
 
 use SixShop\Core\Event\BeforeRegisterRouteEvent;
-use SixShop\Core\Helper;
 use think\facade\Event;
 use think\facade\Route;
 use think\Http;
+use function SixShop\Core\extension_name_list;
 
 class RegisterRouteService
 {
@@ -19,7 +19,7 @@ class RegisterRouteService
     {
         return function () {
             $appName = $this->http->getName();
-            foreach (Helper::extension_name_list() as $extensionName) {
+            foreach (extension_name_list() as $extensionName) {
                 $extension = $this->autoloadService->getExtension($extensionName);
                 if (!$extension->available()) {
                     continue;

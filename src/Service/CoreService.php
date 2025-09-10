@@ -6,12 +6,12 @@ namespace SixShop\Core\Service;
 use Composer\InstalledVersions;
 use Composer\Json\JsonFile;
 use SixShop\Core\Exception\ExceptionHandle;
-use SixShop\Core\Helper;
 use SixShop\Core\Plugin;
 use SixShop\Core\Request;
 use think\event\HttpRun;
 use think\exception\Handle;
 use think\Service;
+use function SixShop\Core\extension_path;
 
 class CoreService extends Service
 {
@@ -85,7 +85,7 @@ class CoreService extends Service
                     if (array_key_exists($item, self::$extensionComposerMap)) {
                         continue;
                     }
-                    if (is_dir(Helper::extension_path($item) . 'src')) {
+                    if (is_dir(extension_path($item) . 'src')) {
                         self::$extensionNameList[] = $item;
                         self::$normalExtensionNameList[] = $item;
                     }

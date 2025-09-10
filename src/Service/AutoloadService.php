@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace SixShop\Core\Service;
 
 use SixShop\Core\Contracts\ExtensionInterface;
-use SixShop\Core\Helper;
 use think\App;
+use function SixShop\Core\extension_path;
 
 
 class AutoloadService
@@ -19,7 +19,7 @@ class AutoloadService
         foreach ($extensionComposerMap as $extensionID => $composerFile) {
             $this->app->bind('extension.' . $extensionID, $composerFile['extra']['sixshop']['class']);
         }
-        $extensionPath = Helper::extension_path();
+        $extensionPath = extension_path();
         $classLoader = $this->app->classLoader;
         foreach ($extensionNameList as $moduleName) {
             $dir = $extensionPath . $moduleName;
