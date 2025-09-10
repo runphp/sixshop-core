@@ -10,7 +10,8 @@
   "autoload": {
     "psr-4": {
       "SixShop\\Core\\": "src/"
-    }
+    },
+    "files": ["src/functions.php"]
   },
   "authors": [
     {
