@@ -107,7 +107,7 @@ function build_tree_options(
                 $node = array_merge($item, $node);
             }
 
-            $children = self::build_tree_options(
+            $children = build_tree_options(
                 $data,
                 $valueField,
                 $labelField,
