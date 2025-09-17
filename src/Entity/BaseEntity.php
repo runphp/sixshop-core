@@ -9,7 +9,11 @@ abstract class BaseEntity extends Entity
     protected function getOptions(): array
     {
         return [
-            'modelClass' => str_replace(['\\Entity\\', 'Entity'], ['\\Entity\\', 'Model'], static::class),
+            'modelClass' => str_replace(
+                ['\\Entity\\', '\\entity\\','Entity'], 
+                ['\\Model\\', '\\model\\', 'Model'], 
+                static::class
+            ),
         ];
     }
 }
