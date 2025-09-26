@@ -96,7 +96,18 @@ class CoreService extends Service
 
     public function boot(): void
     {
-        $this->app->make(AutoloadService::class)->load(self::$extensionComposerMap, self::$normalExtensionNameList);
+        $autoloadService = $this->app->make(AutoloadService::class);
+        $invalidExtensionIDs = $autoloadService->load(self::$extensionComposerMap, self::$normalExtensionNameList);
+        self::$extensionNameList = array_diff(self::$extensionNameList, $invalidExtensionIDs);
+        $this->app->get('extension.system')->boot();
+        foreach (self::$extensionComposerMap + self::$normalExtensionNameList as $moduleName => $_) {
+            if (in_array($moduleName, $invalidExtensionIDs)) {
+                continue;
+            }
+            $extension = $autoloadService->getExtension($moduleName);
+            $extension->boot();
+            $this->app->event->trigger('extension.boot', $extension);
+        }
         $this->app->make(HookAttributeService::class)->init();
         $this->app->event->trigger('hook_init', $this->app);
         $this->app->event->listen(HttpRun::class, function () {

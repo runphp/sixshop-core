@@ -14,10 +14,12 @@ class AutoloadService
     {
     }
 
-    public function load(array $extensionComposerMap, array $extensionNameList): void
+    public function load(array $extensionComposerMap, array $extensionNameList): array
     {
+        $invalidExtensionIDs = [];
         foreach ($extensionComposerMap as $extensionID => $composerFile) {
             if (!isset($composerFile['extra']['sixshop']['class'])) {
+                $invalidExtensionIDs[] = $extensionID;
                 continue;
             }
             $this->app->bind('extension.' . $extensionID, $composerFile['extra']['sixshop']['class']);
@@ -40,11 +42,7 @@ class AutoloadService
                 $this->app->bind('extension.' . $moduleName, $extensionClass);
             }
         }
-        foreach ($extensionComposerMap + $extensionNameList as $moduleName => $_) {
-            $extension = $this->getExtension($moduleName);
-            $extension->boot();
-            $this->app->event->trigger('extension.boot', $extension);
-        }
+        return $invalidExtensionIDs;
     }
 
     public function getExtension(string $moduleName): ExtensionInterface
