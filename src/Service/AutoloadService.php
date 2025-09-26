@@ -17,6 +17,9 @@ class AutoloadService
     public function load(array $extensionComposerMap, array $extensionNameList): void
     {
         foreach ($extensionComposerMap as $extensionID => $composerFile) {
+            if (!isset($composerFile['extra']['sixshop']['class'])) {
+                continue;
+            }
             $this->app->bind('extension.' . $extensionID, $composerFile['extra']['sixshop']['class']);
         }
         $extensionPath = extension_path();
