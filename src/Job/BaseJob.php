@@ -105,8 +105,8 @@ abstract class BaseJob
      */
     protected function handleException(Job $job, mixed $data, \Throwable|\Exception $exception): void
     {
-        Log::error('队列任务执行异常: ' . static::class . ' - ' . $exception->getMessage(), [
-            'data' => is_array($data) ? $data : ['data' => $data],
+        Log::error('队列任务执行异常: ' . static::class . ' - ' . $exception->getMessage().'{data},{trace}', [
+            'data' => json_encode($data),
             'trace' => $exception->getTraceAsString()
         ]);
 
