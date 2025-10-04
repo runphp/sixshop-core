@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SixShop\Core;
 
-use Composer\Autoload\ClassLoader;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\InstalledVersions;
@@ -33,8 +32,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         if (self::$installedSixShopExtensions) {
             return self::$installedSixShopExtensions;
         }
-        $vendorDir = key(ClassLoader::getRegisteredLoaders());
-        $filePath = $vendorDir . '/composer/installedSixShop.php';
+        $composerDir = dirname(InstalledVersions::getInstallPath('composer/composer'),2);
+        $filePath = $composerDir . '/installedSixShop.php';
         if (file_exists($filePath)) {
             return self::$installedSixShopExtensions = require $filePath;
         }
